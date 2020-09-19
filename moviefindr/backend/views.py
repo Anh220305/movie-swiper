@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     rest_list = Movie.objects.order_by('title')
-    context = {'rest_list': rest_list}
+    context = {'movie_list': rest_list}
     return render(request, 'backend/index.html', context)
 
 
@@ -17,7 +17,9 @@ def get_movie_list(request):
     """
     Returns Json list of all movies
     """
+    print("Heyy")
     if request.method == "GET":
-        rest_list = Movie.objects.order_by('-pub_date')
+
+        rest_list = Movie.objects.order_by('title')
         serializer = MovieSerializer(rest_list, many=True)
         return JsonResponse(serializer.data, safe=False)

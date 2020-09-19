@@ -1,5 +1,5 @@
 from django.db import models
-
+import django.contrib.admin
 # Create your models here.
 
 class Movie(models.Model):

@@ -17,9 +17,18 @@ def get_movie_list(request):
     """
     Returns Json list of all movies
     """
-    print("Heyy")
     if request.method == "GET":
-
         rest_list = Movie.objects.order_by('title')
         serializer = MovieSerializer(rest_list, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+#
+def get_novel_movies(request, user_id):
+    """
+    Returns a list of new movies for the user to see
+    """
+    # Get the movies that a user has liked
+
+    # Get the movies that a user has unliked
+
+    pass

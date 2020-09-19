@@ -3,11 +3,12 @@
 <html>
 
 <body>
-  <p> Testing </p>
+  <p> Testing: </p>
   {% if movie_list %}
-    Got some movies
+    Got some movies <br><br><br>
     {% for movie in movie_list %}
-      {{movie.Title}}
+      <b>Title:</b> <i>{{movie.title}}</i> <br>
+      <b>Description:</b>{{movie.description}} <br><br>
     {% endfor %}
   {% endif %}
 

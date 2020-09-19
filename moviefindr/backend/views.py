@@ -13,7 +13,7 @@ API_KEY = 'e641ca82ca344df21e96b915c57029c1'
 
 def index(request):
     rest_list = Movie.objects.order_by('title')
-    context = {'rest_list': rest_list}
+    context = {'movie_list': rest_list}
     return render(request, 'backend/index.html', context)
 
 
@@ -22,8 +22,10 @@ def get_movie_list(request):
     """
     Returns Json list of all movies
     """
+    print("Heyy")
     if request.method == "GET":
-        rest_list = Movie.objects.order_by('-pub_date')
+
+        rest_list = Movie.objects.order_by('title')
         serializer = MovieSerializer(rest_list, many=True)
         return JsonResponse(serializer.data, safe=False)
 

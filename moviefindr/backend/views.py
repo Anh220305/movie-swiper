@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from django.http import JsonResponse
-from .models import Movie
+from django.http import JsonResponse, HttpResponse
+from .models import Movie, User
 from .serializers import MovieSerializer
 from django.views.decorators.csrf import csrf_exempt
 import requests
@@ -22,13 +22,24 @@ def get_movie_list(request):
     """
     Returns Json list of all movies
     """
-    print("Heyy")
     if request.method == "GET":
-
         rest_list = Movie.objects.order_by('title')
         serializer = MovieSerializer(rest_list, many=True)
         return JsonResponse(serializer.data, safe=False)
 
+def get_novel_movies(request, username):
+    """
+    Returns a list of new movies for the user to see
+    """
+    # Get the user
+    user = (User.objects.get(username=username))
+    print(user)
+
+    # Get the movies that the user has liked
+    # liked_movies =
+
+    # Get the movies that the user has unliked
+    return HttpResponse(user)
 
 def get_movie_names(request):
     """

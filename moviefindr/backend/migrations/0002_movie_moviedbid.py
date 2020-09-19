@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='movie',
             name='movieDbId',
-            field=models.IntegerField(default=0),
+            field=models.IntegerField(default=1),
             preserve_default=False,
         ),
     ]

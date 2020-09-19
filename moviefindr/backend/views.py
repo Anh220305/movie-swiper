@@ -54,7 +54,6 @@ def create_url_construction_fn():
     r = requests.get(url)
     if r.status_code == 200:
         response = r.json()
-        print(response)
         base_url = response["images"]["base_url"]
         img_size = response["images"]["poster_sizes"][3]
 
@@ -67,7 +66,7 @@ def create_url_construction_fn():
     return construct_url
 
 
-def populate_new_movies(request, num=1):
+def populate_new_movies(request, num=50):
     added = 0
     page = 1
     existing = get_existing_ids()

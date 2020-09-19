@@ -30,8 +30,17 @@ def get_movie_list(request):
         return JsonResponse(serializer.data, safe=False)
 
 
+def get_movie_names(request):
+    """
+    Returns Json list of all movies
+    """
+    print("Heyy")
+    if request.method == "GET":
+        return JsonResponse(list(Movie.objects.all().values_list('title', flat=True)), safe=False)
+
+
 def get_existing_ids():
-    return Movie.objects.all().values('movieDbId')
+    return set(Movie.objects.all().values_list('movieDbId', flat=True))
 
 
 def add_movie_to_db(movie, construct_img_url):
@@ -45,8 +54,9 @@ def create_url_construction_fn():
     r = requests.get(url)
     if r.status_code == 200:
         response = r.json()
-        base_url = response["image"]["base_url"]
-        img_size = response["image"]["poster_sizes"][3]
+        print(response)
+        base_url = response["images"]["base_url"]
+        img_size = response["images"]["poster_sizes"][3]
 
         def construct_url(file_path):
             return base_url + img_size + file_path
@@ -57,7 +67,7 @@ def create_url_construction_fn():
     return construct_url
 
 
-def populate_new_movies(num=50):
+def populate_new_movies(request, num=1):
     added = 0
     page = 1
     existing = get_existing_ids()
@@ -76,4 +86,4 @@ def populate_new_movies(num=50):
                 added += 1
             page += 1
 
-    return None
+    return get_movie_list(request)

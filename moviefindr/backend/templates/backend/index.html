@@ -1,0 +1,16 @@
+{% load static %}
+<!doctype html>
+<html>
+
+<body>
+  <p> Testing </p>
+  {% if movie_list %}
+    Got some movies
+    {% for movie in movie_list %}
+      {{movie.Title}}
+    {% endfor %}
+  {% endif %}
+
+</body>
+
+</html>

@@ -6,7 +6,7 @@ const BASE_URL = 'http://localhost:8000/backend/api'
 
 // TODO make API request
 const uploadMovie = (username, movieName, setResult) => {
-    fetch(`${BASE_URL}/upload?username=${encodeURIComponent(username)}&movieName=${encodeURIComponent(movieName)}`)
+    fetch(`${BASE_URL}/upload?username=${encodeURIComponent(username)}&movie=${encodeURIComponent(movieName)}`)
       .then(response => response.json())
       .then(data => {
         setResult(data);
@@ -79,7 +79,7 @@ const Card = (props) => {
     return (
 
         <div className="movieCard">
-            <img src={props.movie.posterUrl} className="poster"></img>
+            <img alt={`${props.movie.title} poster`}src={props.movie.posterUrl} className="poster"></img>
             <div className="movieInfo">
                 <h3>{props.movie.title}</h3>
                 <p>{props.movie.description}</p>
@@ -146,7 +146,7 @@ const Friend = (props) => {
 const Movie = (props) => {
     return (
         <div className="movie">
-            <img className="miniPoster" src={props.movie.posterUrl}></img>
+            <img className="miniPoster" alt={`${props.movie.title} poster`} src={props.movie.posterUrl}></img>
             <div className="miniMovieInfo">
                 <h4>{props.movie.title}</h4>
                 <p>{props.movie.description}</p>
@@ -177,7 +177,7 @@ const Compare = (props) => {
     }
 
     const removeFriend = (name) => {
-        setFriends(friends.filter((friend) => friend != name));
+        setFriends(friends.filter((friend) => friend !== name));
     }
 
     const movies = getMovieIntersection(friends);

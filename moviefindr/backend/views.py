@@ -65,8 +65,8 @@ def get_novel_movies(request, username, num_movies_to_return=10):
 
 @csrf_exempt
 def try_movie_upload(request):
-    username = request.GET['username']
-    movie_name = request.GET['movie']
+    username = request.GET.get('username')
+    movie_name = request.GET.get('movie')
 
     in_our_db = Movie.objects.filter(title=movie_name).exists()
 

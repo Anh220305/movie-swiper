@@ -58,7 +58,7 @@ def get_novel_movies(request, username, num_movies_to_return=10):
             flat=True)).exclude(id__in=liked_movies.values_list('id', flat=True))
 
     # Return the top K most popular movies from the lits of novel movies
-    sorted_novel_movies = Movie.objects.order_by('-popularity')[:num_movies_to_return]
+    sorted_novel_movies = novel_movies.order_by('-popularity')[:num_movies_to_return]
     serializer = MovieSerializer(sorted_novel_movies, many=True)
 
     return JsonResponse(serializer.data, safe=False)

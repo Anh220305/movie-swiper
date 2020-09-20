@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+// TODO make API request
+const uploadMovie = (username, movieName) => {
+    return false;
+}
+
 const Upload = (props) => {
   const [inputValue, setInputValue] = useState('');
 
@@ -28,10 +33,12 @@ const Upload = (props) => {
   );
 }
 
+// TODO make API request
 const fetchSwipeContents = (username) => {
     return [{"title": "We Summon the Darkness", "movieDbId": 546724, "description": "Three best friends attending a heavy-metal show cross paths with sadistic killers after they travel to a secluded country home for an after party.", "posterUrl": "http://image.tmdb.org/t/p/w342/zXAwq18CJYmzhLZNbLpBf3dG3A5.jpg", "netflixOk": false}, {"title": "Weathering with You", "movieDbId": 568160, "description": "Tokyo is currently experiencing rain showers that seem to disrupt the usual pace of everyone living there to no end. Amidst this seemingly eternal downpour arrives the runaway high school student Hodaka Morishima, who struggles to financially support himself\u2014ending up with a job at a small-time publisher. At the same time, the orphaned Hina Amano also strives to find work to sustain herself and her younger brother.\r Both fates intertwine when Hodaka attempts to rescue Hina from shady men, deciding to run away together. Subsequently, Hodaka discovers that Hina has a strange yet astounding power: the ability to call out the sun whenever she prays for it. With Tokyo's unusual weather in mind, Hodaka sees the potential of this ability. He suggests that Hina should become a \"sunshine girl\"\u2014someone who will clear the sky for people when they need it the most.\r Things begin looking up for them at first. However, it is common knowledge that power always comes with a hefty price...", "posterUrl": "http://image.tmdb.org/t/p/w342/qgrk7r1fV4IjuoeiGS5HOhXNdLJ.jpg", "netflixOk": false}, {"title": "Your Name.", "movieDbId": 372058, "description": "High schoolers Mitsuha and Taki are complete strangers living separate lives. But one night, they suddenly switch places. Mitsuha wakes up in Taki\u2019s body, and he in hers. This bizarre occurrence continues to happen randomly, and the two must adjust their lives around each other.", "posterUrl": "http://image.tmdb.org/t/p/w342/q719jXXEzOoYaps6babgKnONONX.jpg", "netflixOk": false}, {"title": "Zombieland: Double Tap", "movieDbId": 338967, "description": "Columbus, Tallahassee, Wichita, and Little Rock move to the American heartland as they face off against evolved zombies, fellow survivors, and the growing pains of the snarky makeshift family.", "posterUrl": "http://image.tmdb.org/t/p/w342/dtRbVsUb5O12WWO54SRpiMtHKC0.jpg", "netflixOk": false}];
 }
 
+// TODO make API request
 const postSwipeResults = (cards) => {}
 
 const Card = (props) => {
@@ -115,6 +122,7 @@ const Movie = (props) => {
     )
 }
 
+// TODO make API request
 const getMovieIntersection = (usernames) => {
     return [{"title": "We Summon the Darkness", "movieDbId": 546724, "description": "Three best friends attending a heavy-metal show cross paths with sadistic killers after they travel to a secluded country home for an after party.", "posterUrl": "http://image.tmdb.org/t/p/w342/zXAwq18CJYmzhLZNbLpBf3dG3A5.jpg", "netflixOk": false}, {"title": "Weathering with You", "movieDbId": 568160, "description": "Tokyo is currently experiencing rain showers that seem to disrupt the usual pace of everyone living there to no end. Amidst this seemingly eternal downpour arrives the runaway high school student Hodaka Morishima, who struggles to financially support himself\u2014ending up with a job at a small-time publisher. At the same time, the orphaned Hina Amano also strives to find work to sustain herself and her younger brother.\r Both fates intertwine when Hodaka attempts to rescue Hina from shady men, deciding to run away together. Subsequently, Hodaka discovers that Hina has a strange yet astounding power: the ability to call out the sun whenever she prays for it. With Tokyo's unusual weather in mind, Hodaka sees the potential of this ability. He suggests that Hina should become a \"sunshine girl\"\u2014someone who will clear the sky for people when they need it the most.\r Things begin looking up for them at first. However, it is common knowledge that power always comes with a hefty price...", "posterUrl": "http://image.tmdb.org/t/p/w342/qgrk7r1fV4IjuoeiGS5HOhXNdLJ.jpg", "netflixOk": false}, {"title": "Your Name.", "movieDbId": 372058, "description": "High schoolers Mitsuha and Taki are complete strangers living separate lives. But one night, they suddenly switch places. Mitsuha wakes up in Taki\u2019s body, and he in hers. This bizarre occurrence continues to happen randomly, and the two must adjust their lives around each other.", "posterUrl": "http://image.tmdb.org/t/p/w342/q719jXXEzOoYaps6babgKnONONX.jpg", "netflixOk": false}, {"title": "Zombieland: Double Tap", "movieDbId": 338967, "description": "Columbus, Tallahassee, Wichita, and Little Rock move to the American heartland as they face off against evolved zombies, fellow survivors, and the growing pains of the snarky makeshift family.", "posterUrl": "http://image.tmdb.org/t/p/w342/dtRbVsUb5O12WWO54SRpiMtHKC0.jpg", "netflixOk": false}];
 }

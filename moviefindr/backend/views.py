@@ -36,7 +36,7 @@ def get_novel_movies(request, username, num_movies_to_return=10):
     """
     # Get the user
     # user = (User.objects.filter(username__endswith=username, username__startswith=username))[0]
-    user = User.objects.filter(username=username)[0]#, username__startswith=username))[0]
+    user = get_or_create_user(username)  #, username__startswith=username))[0]
 
     # Get the movies that the user has liked
     liked_movies = user.liked_movies.all()
@@ -63,6 +63,16 @@ def get_novel_movies(request, username, num_movies_to_return=10):
 
     return JsonResponse(serializer.data, safe=False)
 
+
+def get_or_create_user(username):
+    user_results = User.objects.filter(username=username)
+    if len(user_results) == 0:
+        new_user = User(username=username)
+        new_user.save()
+        user_results = User.objects.filter(username=username)
+    user = user_results[0]
+    return user
+
 @csrf_exempt
 def try_movie_upload(request):
     username = request.GET.get('username')
@@ -87,12 +97,7 @@ def try_movie_upload(request):
             else:
                 return JsonResponse(False, safe=False)
 
-    user_results = User.objects.filter(username=username)
-    if len(user_results) == 0:
-        new_user = User(username=username)
-        new_user.save()
-        user_results = User.objects.filter(username=username)
-    user = user_results[0]
+    get_or_create_user(username)
     user.liked_movies.add(movie)
 
     return JsonResponse(MovieSerializer(movie).data, safe=False)
@@ -104,15 +109,18 @@ def get_intersection(request):
 
     Request GET params should have a comma-separated list of usernames
     """
-    usernames = request.GET['usernames'].split(',')
+    print(request.GET)
+    usernames = request.GET.get('usernames').split(',')
+
+    print(usernames)
 
     # Initialize the set of possible movies with the preferences of the first user
-    first_user = User.objects.filter(username=usernames[0])[0]
+    first_user = get_or_create_user(usernames[0])
     eligible_movies = first_user.liked_movies.all()
 
     # Repeatedly filter out movies, by pruning out those that aren't in people's liked_movies sets.
     for username in usernames[1:]:
-        user = User.objects.filter(username=username)[0]
+        user = get_or_create_user(username)
         liked_movies = user.liked_movies.all()
         eligible_movies = eligible_movies.filter(id__in=liked_movies.values_list('id', flat=True))
 
@@ -142,7 +150,7 @@ def rate_movie(request):
     username = data['username']
     moviedb_id_to_rating = data['moviedb_id_to_rating']
 
-    user = User.objects.filter(username=username)[0]
+    user = get_or_create_user(username)
     for moviedb_id in moviedb_id_to_rating:
         likes_movie = moviedb_id_to_rating[moviedb_id]
         movie = Movie.objects.filter(movieDbId=int(moviedb_id))[0]

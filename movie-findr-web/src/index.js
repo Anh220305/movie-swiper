@@ -62,17 +62,17 @@ const fetchSwipeContents = (username, setCards) => {
 }
 
 // TODO make API request
-const postSwipeResults = (cards) => {
-    console.log(cards)
-    const novel_movies_response = fetch(
+const postSwipeResults = (username, movie, liked) => {
+    const data = { 'username':username, 'moviedb_id_to_rating': {[movie.movieDbId]: liked}}
+
+    console.log(data);
+
+    fetch(
         'http://localhost:8000/backend/api/rate_movie',
         {method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({example:'data'})}
+        body: JSON.stringify(data)}
     )
-
-
-    console.log(novel_movies_response)
 
 }
 
@@ -103,21 +103,21 @@ const Swipe = (props) => {
 
     const swipeLeft = () => {
         if (cardIndex < cards.length) {
-            setCards((currentCards) => Object.assign([], cards, {cardIndex: {...cards[cardIndex], liked: false}}));
+            console.log(cards[cardIndex]);
+            postSwipeResults(props.username, cards[cardIndex], false);
             setCardIndex((current) => current+1);
         }
     }
 
     const swipeRight = () => {
         if (cardIndex < cards.length) {
-            setCards((currentCards) => Object.assign([], cards, {cardIndex: {...cards[cardIndex], liked: true}}));
+            postSwipeResults(props.username, cards[cardIndex], true);
             setCardIndex((current) => current+1);
         }
     }
 
     useEffect(() => {
         if (cardIndex >= cards.length) {
-            postSwipeResults(cards);
             fetchSwipeContents(props.username, setCards);
             setCardIndex(0);
         }
@@ -157,14 +157,19 @@ const Movie = (props) => {
     )
 }
 
-// TODO make API request
-const getMovieIntersection = (usernames) => {
-    return [{"title": "We Summon the Darkness", "movieDbId": 546724, "description": "Three best friends attending a heavy-metal show cross paths with sadistic killers after they travel to a secluded country home for an after party.", "posterUrl": "http://image.tmdb.org/t/p/w342/zXAwq18CJYmzhLZNbLpBf3dG3A5.jpg", "netflixOk": false}, {"title": "Weathering with You", "movieDbId": 568160, "description": "Tokyo is currently experiencing rain showers that seem to disrupt the usual pace of everyone living there to no end. Amidst this seemingly eternal downpour arrives the runaway high school student Hodaka Morishima, who struggles to financially support himself\u2014ending up with a job at a small-time publisher. At the same time, the orphaned Hina Amano also strives to find work to sustain herself and her younger brother.\r Both fates intertwine when Hodaka attempts to rescue Hina from shady men, deciding to run away together. Subsequently, Hodaka discovers that Hina has a strange yet astounding power: the ability to call out the sun whenever she prays for it. With Tokyo's unusual weather in mind, Hodaka sees the potential of this ability. He suggests that Hina should become a \"sunshine girl\"\u2014someone who will clear the sky for people when they need it the most.\r Things begin looking up for them at first. However, it is common knowledge that power always comes with a hefty price...", "posterUrl": "http://image.tmdb.org/t/p/w342/qgrk7r1fV4IjuoeiGS5HOhXNdLJ.jpg", "netflixOk": false}, {"title": "Your Name.", "movieDbId": 372058, "description": "High schoolers Mitsuha and Taki are complete strangers living separate lives. But one night, they suddenly switch places. Mitsuha wakes up in Taki\u2019s body, and he in hers. This bizarre occurrence continues to happen randomly, and the two must adjust their lives around each other.", "posterUrl": "http://image.tmdb.org/t/p/w342/q719jXXEzOoYaps6babgKnONONX.jpg", "netflixOk": false}, {"title": "Zombieland: Double Tap", "movieDbId": 338967, "description": "Columbus, Tallahassee, Wichita, and Little Rock move to the American heartland as they face off against evolved zombies, fellow survivors, and the growing pains of the snarky makeshift family.", "posterUrl": "http://image.tmdb.org/t/p/w342/dtRbVsUb5O12WWO54SRpiMtHKC0.jpg", "netflixOk": false}];
+const getMovieIntersection = (username, usernames, setMovies) => {
+    fetch(`${BASE_URL}/intersection?usernames=${encodeURIComponent(usernames.concat([username]).join())}`,
+    )
+    .then(response => response.json())
+    .then(data => {
+        setMovies(data);
+    });
 }
 
 const Compare = (props) => {
 
-    const [friends, setFriends] = useState([])
+    const [friends, setFriends] = useState([]);
+    const [movies, setMovies] = useState([]);
 
     const [inputValue, setInputValue] = useState('');
 
@@ -182,7 +187,9 @@ const Compare = (props) => {
         setFriends(friends.filter((friend) => friend !== name));
     }
 
-    const movies = getMovieIntersection(friends);
+    useEffect(() => {
+        getMovieIntersection(props.username, friends, setMovies);
+    }, [friends]);
 
     return (
         <div className="main green">
@@ -197,7 +204,7 @@ const Compare = (props) => {
                 <div className="friendList">
                     {friends.map((f) => (<Friend name={f} key={f} removeFriend={() => removeFriend(f)} />))}
                 </div>
-                <div className="movieList">
+                <div className="movieList green">
                     <h2>Movies you all want to watch:</h2>
                     {movies.map((m) => (<Movie movie={m} key={m.title} />))}
                 </div>

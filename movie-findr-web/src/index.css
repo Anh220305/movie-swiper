@@ -206,3 +206,7 @@ button {
     text-align: left;
     margin-left: 11%;
 }
+
+.movieList {
+    padding-bottom: 40px;
+}

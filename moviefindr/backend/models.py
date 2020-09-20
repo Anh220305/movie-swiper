@@ -8,6 +8,7 @@ class Movie(models.Model):
     description = models.TextField()
     posterUrl = models.CharField(max_length=1000)
     netflixOk = models.BooleanField()
+    popularity = models.FloatField()
     # posterImage = models.ImageField(upload_to='backend/posters',null=True,blank=True)
 
     def __str__(self):
@@ -20,4 +21,9 @@ class User(models.Model):
     unliked_movies = models.ManyToManyField(Movie, related_name="unliked_movies")
 
     def __str__(self):
-        return self.username
+        return """Username: {}, \n
+        Liked Movies: {}, \n
+        Unliked Movies: {} \n""".format(self.username,
+            ', '.join([str(movie) for movie in self.liked_movies.all()]),
+            ', '.join([str(movie) for movie in self.unliked_movies.all()])
+        )

@@ -277,11 +277,18 @@ const App = () => {
     setLoggedIn(true);
   }
 
+  const logout = () => {
+    if (loggedIn) {
+        window.location.reload(false);
+    }
+  }
+
   return (
     <>
      <button className="nav" onClick={()=>setState(0)}>
         {loggedIn ? `${username}'s Home` : 'Home'}
      </button>
+     <button className="logout" onClick={logout}>Logout</button>
      {state === 0 && < Home changeState={changeState}/>}
      {state === 1 && < Upload username={username} />}
      {state === 2 && < Swipe username={username} />}

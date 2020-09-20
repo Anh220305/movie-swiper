@@ -4,7 +4,6 @@ import './index.css';
 
 const BASE_URL = 'http://localhost:8000/backend/api'
 
-// TODO make API request
 const uploadMovie = (username, movieName, setResult) => {
     fetch(`${BASE_URL}/upload?username=${encodeURIComponent(username)}&movie=${encodeURIComponent(movieName)}`)
       .then(response => response.json())

@@ -36,7 +36,7 @@ const Upload = (props) => {
           </label>
           <input className="submitButton" type="submit" value="submit" />
         </form>
-        <div>
+        <div class="pink">
             {!!result && (
                 <>
                     <h2>We've made a note that you want to watch the following movie:</h2>

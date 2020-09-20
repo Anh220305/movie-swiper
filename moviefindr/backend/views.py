@@ -103,8 +103,6 @@ def rate_movie(request):
     """
     data = json.loads(request.body)
 
-    # r = requests.post('http://localhost:8000/backend/api/rate_movie',json={'username':'jomanw', 'moviedb_id_to_rating':[(694919,True),(337401,False)})
-
     username = data['username']
     moviedb_id_to_rating = data['moviedb_id_to_rating']
 

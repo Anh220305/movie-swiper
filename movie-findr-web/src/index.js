@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import FacebookLogin from 'react-facebook-login';
 import './index.css';
 
 const BASE_URL = 'http://moviefindr.ddns.net:8000/backend/api'
@@ -126,7 +127,7 @@ const Swipe = (props) => {
     return (
         <div className="main blue">
             <h1>For each movie, let us know if you'd watch it or not!</h1>
-            <div className="cardContainer">
+            <div className="cardContainer blue">
                 {cardIndex < cards.length ? <Card movie={cards[cardIndex]} /> : <h3 className="emptyCard">No movies currently available!</h3>}
                 <button className="swipe swipeLeft" onClick={swipeLeft} >X</button>
                 <button className="swipe swipeRight" onClick={swipeRight} >✓</button>
@@ -246,6 +247,12 @@ const Login = (props) => {
         props.logIn();
     }
 
+    const responseFacebook = (response) => {
+        console.log(response);
+        props.setUsername(response.name);
+        props.logIn();
+    }
+
     return (
         <div className="loginPopup">
             <form onSubmit={handleSubmit}>
@@ -254,6 +261,12 @@ const Login = (props) => {
                 <input className="usernameInput" type="text" value={inputValue} onChange={handleChange} />
               </label>
               <input className="usernameSubmit" type="submit" value="submit" />
+              <p>OR</p>
+              <FacebookLogin
+                appId="3306640759452993" //APP ID NOT CREATED YET
+                fields="name,email,picture"
+                callback={responseFacebook}
+              />
             </form>
         </div>
     );

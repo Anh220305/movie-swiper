@@ -61,6 +61,7 @@ def get_novel_movies(request, username, num_movies_to_return=10):
 
     return JsonResponse(serializer.data, safe=False)
 
+
 def get_intersection(request):
     """
     Returns the intersection of movie preferences of a set of users
@@ -82,6 +83,7 @@ def get_intersection(request):
     serializer = MovieSerializer(eligible_movies, many=True)
 
     return JsonResponse(serializer.data, safe=False)
+
 
 @csrf_exempt
 def rate_movie(request):
@@ -118,9 +120,6 @@ def rate_movie(request):
     user.save()
 
     return HttpResponse("Success")
-
-
-
 
 
 def get_movie_names(request):

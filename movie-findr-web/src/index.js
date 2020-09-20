@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-const BASE_URL = 'http://localhost:8000/backend/api'
+const BASE_URL = 'http://moviefindr.ddns.net:8000/backend/api'
 
 const uploadMovie = (username, movieName, setResult) => {
     fetch(`${BASE_URL}/upload?username=${encodeURIComponent(username)}&movie=${encodeURIComponent(movieName)}`)

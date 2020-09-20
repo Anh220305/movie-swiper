@@ -2,13 +2,21 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+const BASE_URL = 'http://localhost:8000/backend/api'
+
 // TODO make API request
-const uploadMovie = (username, movieName) => {
-    return false;
+const uploadMovie = (username, movieName, setResult) => {
+    fetch(`${BASE_URL}/upload?username=${encodeURIComponent(username)}&movieName=${encodeURIComponent(movieName)}`)
+      .then(response => response.json())
+      .then(data => {
+        setResult(data);
+      });
 }
 
 const Upload = (props) => {
   const [inputValue, setInputValue] = useState('');
+
+  const [result, setResult] = useState(null);
 
   const handleChange = (event) => {
     setInputValue(event.target.value);
@@ -17,7 +25,7 @@ const Upload = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setInputValue('');
-    alert('A movie was submitted: ' + inputValue + ' by '+props.username);
+    uploadMovie(props.username, inputValue, setResult)
   }
 
   return (
@@ -29,6 +37,17 @@ const Upload = (props) => {
           </label>
           <input className="submitButton" type="submit" value="submit" />
         </form>
+        <div>
+            {!!result && (
+                <>
+                    <h2>We've made a note that you want to watch the following movie:</h2>
+                    <Card movie={result} />
+                </>
+            )}
+            {result !== null && !result && (
+                <h1>Sorry! We can't find that movie.</h1>
+            )}
+        </div>
     </div>
   );
 }

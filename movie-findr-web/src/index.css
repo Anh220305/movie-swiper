@@ -35,6 +35,7 @@ button {
     height: 100px;
     border-radius: 10px 0px 0px 10px;
     font-size: 30px;
+    padding: 0px 15px;
     border: 2px solid black;
 }
 
@@ -146,4 +147,62 @@ button {
 .swipeRight {
     color: green;
     right: 35%;
+}
+
+.loginPopup {
+    position: absolute;
+    background-color: white;
+    left: 25%;
+    top: 25%;
+    width:50%;
+    height: 30%;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 10px;
+}
+
+.usernameInput {
+    margin-top: 50px;
+}
+
+.chooseFriends {
+    margin-top: 20px;
+}
+
+.friendList {
+    margin: 10px;
+}
+
+.friend {
+    background-color: #e6e6e6;
+    display: inline-block;
+    padding: 5px;
+    margin: 5px;
+}
+
+.miniPoster {
+    display: inline-block;
+    vertical-align: top;
+    height: 100px;
+}
+
+.miniMovieInfo {
+    display: inline-block;
+    width: 70%;
+    text-align: left;
+    vertical-align: top;
+    margin-left: 50px;
+}
+
+.miniMovieInfo h4 {
+    margin-top: 0px;
+}
+
+.movie {
+    margin-top: 30px;
+}
+
+.movieList h2 {
+    text-align: left;
+    margin-left: 11%;
 }

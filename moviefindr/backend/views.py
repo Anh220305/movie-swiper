@@ -61,7 +61,7 @@ def get_novel_movies(request, username, num_movies_to_return=10):
 
     return JsonResponse(serializer.data, safe=False)
 
-
+@csrf_exempt
 def get_intersection(request):
     """
     Returns the intersection of movie preferences of a set of users

@@ -25,7 +25,7 @@ SECRET_KEY = 'x&$swf$vb*mfzg^6xgbjfgc%$n4y1w&=#g^&v(1nmp$2i7(u#r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['moviefindr.ddns.net']
+ALLOWED_HOSTS = ['moviefindr.ddns.net', 'localhost']
 
 
 # Application definition

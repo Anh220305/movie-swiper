@@ -76,6 +76,7 @@ def get_or_create_user(username):
 @csrf_exempt
 def try_movie_upload(request):
     username = request.GET.get('username')
+    user = get_or_create_user(username)
     movie_name = request.GET.get('movie')
 
     in_our_db = Movie.objects.filter(title=movie_name).exists()
@@ -97,7 +98,6 @@ def try_movie_upload(request):
             else:
                 return JsonResponse(False, safe=False)
 
-    get_or_create_user(username)
     user.liked_movies.add(movie)
 
     return JsonResponse(MovieSerializer(movie).data, safe=False)

@@ -212,7 +212,7 @@ button {
 }
 
 .logout {
-    position: absolute;
+    position: fixed;
     right: 20px;
     top: 15px;
 }

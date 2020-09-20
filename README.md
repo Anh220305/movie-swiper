@@ -24,6 +24,14 @@ Finally, once you'd added a couple movies to your "want to watch" list, head ove
 
 ![compare](./preview/movieFindrCompare.JPG)
 
+## How it's Made
+
+This web app uses a combination of languages, frameworks, and tools. For the backend we're using Python and Django with a SQLite database. We designed a data model and API contract, and implemented that along with some other services and views that would be useful. For the frontend, we created a React app and used HTML and CSS to make everything look presentable. We also used a Facebook Login node module to allow users to log in via Facebook.
+
+## What comes next?
+
+Some things we'd like to add to this project if we have more time are adding in TV shows, allowing users to filter by genre when comparing, allowing users to choose friends from their Facebook friends list when comparing, allowing users to filter by availability on different streaming services, and allowing users to remove a movie from their Liked list.
+
 ## Credit
 
 This project would not be possible without [The Movie Database](https://www.themoviedb.org/)'s free API!!

@@ -2,13 +2,20 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-// TODO make API request
-const uploadMovie = (username, movieName) => {
-    return false;
+const BASE_URL = 'http://localhost:8000/backend/api'
+
+const uploadMovie = (username, movieName, setResult) => {
+    fetch(`${BASE_URL}/upload?username=${encodeURIComponent(username)}&movie=${encodeURIComponent(movieName)}`)
+      .then(response => response.json())
+      .then(data => {
+        setResult(data);
+      });
 }
 
 const Upload = (props) => {
   const [inputValue, setInputValue] = useState('');
+
+  const [result, setResult] = useState(null);
 
   const handleChange = (event) => {
     setInputValue(event.target.value);
@@ -17,7 +24,7 @@ const Upload = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setInputValue('');
-    alert('A movie was submitted: ' + inputValue + ' by '+props.username);
+    uploadMovie(props.username, inputValue, setResult)
   }
 
   return (
@@ -29,6 +36,17 @@ const Upload = (props) => {
           </label>
           <input className="submitButton" type="submit" value="submit" />
         </form>
+        <div>
+            {!!result && (
+                <>
+                    <h2>We've made a note that you want to watch the following movie:</h2>
+                    <Card movie={result} />
+                </>
+            )}
+            {result !== null && !result && (
+                <h1>Sorry! We can't find that movie.</h1>
+            )}
+        </div>
     </div>
   );
 }
@@ -64,7 +82,7 @@ const Card = (props) => {
     return (
 
         <div className="movieCard">
-            <img src={props.movie.posterUrl} className="poster"></img>
+            <img alt={`${props.movie.title} poster`}src={props.movie.posterUrl} className="poster"></img>
             <div className="movieInfo">
                 <h3>{props.movie.title}</h3>
                 <p>{props.movie.description}</p>
@@ -131,7 +149,7 @@ const Friend = (props) => {
 const Movie = (props) => {
     return (
         <div className="movie">
-            <img className="miniPoster" src={props.movie.posterUrl}></img>
+            <img className="miniPoster" alt={`${props.movie.title} poster`} src={props.movie.posterUrl}></img>
             <div className="miniMovieInfo">
                 <h4>{props.movie.title}</h4>
                 <p>{props.movie.description}</p>
@@ -162,7 +180,7 @@ const Compare = (props) => {
     }
 
     const removeFriend = (name) => {
-        setFriends(friends.filter((friend) => friend != name));
+        setFriends(friends.filter((friend) => friend !== name));
     }
 
     const movies = getMovieIntersection(friends);

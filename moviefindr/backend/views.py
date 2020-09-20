@@ -10,7 +10,7 @@ API_KEY = 'e641ca82ca344df21e96b915c57029c1'
 
 
 # Create your views here.
-
+@csrf_exempt
 def index(request):
     movie_list = Movie.objects.order_by('title')
     context = {'movie_list': movie_list}
@@ -18,6 +18,7 @@ def index(request):
 
 
 # Rest api end point
+@csrf_exempt
 def get_movie_list(request):
     """
     Returns Json list of all movies
@@ -28,6 +29,7 @@ def get_movie_list(request):
         return JsonResponse(serializer.data, safe=False)
 
 
+@csrf_exempt
 def get_novel_movies(request, username, num_movies_to_return=10):
     """
     Returns a list of new movies for the user to see
@@ -62,6 +64,40 @@ def get_novel_movies(request, username, num_movies_to_return=10):
     return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
+def try_movie_upload(request):
+    username = request.GET.get('username')
+    movie_name = request.GET.get('movie')
+
+    in_our_db = Movie.objects.filter(title=movie_name).exists()
+
+    if in_our_db:
+        movie = Movie.objects.filter(title=movie_name)[0]
+    else:
+        # Try to find movie in MovieDB
+        url = 'https://api.themoviedb.org/3/search/movie?api_key=%s&query=%s' % (API_KEY, movie_name)
+        r = requests.get(url)
+        if r.status_code == 200:
+            results = r.json()['results']
+            if len(results) > 0:
+                foundMovie = results[0]  # replace this with DB result
+                moviedb_id = foundMovie['id']
+                construct_img_url = create_url_construction_fn()
+                add_movie_to_db(foundMovie, construct_img_url)
+                movie = Movie.objects.filter(movieDbId=int(moviedb_id))[0]
+            else:
+                return JsonResponse(False, safe=False)
+
+    user_results = User.objects.filter(username=username)
+    if len(user_results) == 0:
+        new_user = User(username=username)
+        new_user.save()
+        user_results = User.objects.filter(username=username)
+    user = user_results[0]
+    user.liked_movies.add(movie)
+
+    return JsonResponse(MovieSerializer(movie).data, safe=False)
+
+@csrf_exempt
 def get_intersection(request):
     """
     Returns the intersection of movie preferences of a set of users
@@ -78,7 +114,7 @@ def get_intersection(request):
     for username in usernames[1:]:
         user = User.objects.filter(username=username)[0]
         liked_movies = user.liked_movies.all()
-        elibigle_movies = eligible_movies.filter(id__in=liked_movies.values_list('id', flat=True))
+        eligible_movies = eligible_movies.filter(id__in=liked_movies.values_list('id', flat=True))
 
     serializer = MovieSerializer(eligible_movies, many=True)
 
@@ -119,7 +155,7 @@ def rate_movie(request):
 
     return HttpResponse("Success")
 
-
+@csrf_exempt
 def get_movie_names(request):
     """
     Returns Json list of all movies
@@ -154,7 +190,7 @@ def create_url_construction_fn():
 
     return construct_url
 
-
+@csrf_exempt
 def populate_new_movies(request, num=50):
     added = 0
     page = 1

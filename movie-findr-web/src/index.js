@@ -5,74 +5,6 @@ import './index.css';
 
 const BASE_URL = 'http://localhost:8000/backend/api'
 
-// Navigation Component
-const BackArrow = ({ onClick }) => (
-  <div className="back-arrow" onClick={onClick}>
-    <svg viewBox="0 0 24 24">
-      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-    </svg>
-  </div>
-);
-
-// Icon Components
-const UploadIcon = () => (
-  <svg viewBox="0 0 24 24">
-    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-  </svg>
-);
-
-const HeartIcon = () => (
-  <svg viewBox="0 0 24 24">
-    <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
-  </svg>
-);
-
-const CompareIcon = () => (
-  <svg viewBox="0 0 24 24">
-    <path d="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V5H19V19M17,17H7V16H17V17M17,15H7V14H17V15M17,12H7V7H17V12Z"/>
-  </svg>
-);
-
-// Home Component
-const Home = ({ setCurrentView, username }) => (
-  <div className="main">
-    <div className="home-container">
-      <div className="feature-card upload" onClick={() => setCurrentView('upload')}>
-        <div className="card-content">
-          <div className="card-icon">
-            <UploadIcon />
-          </div>
-          <h2>Upload</h2>
-          <p>Add new movies to your collection. Upload video files, posters, and metadata.</p>
-        </div>
-        <button className="card-button">Add Movies</button>
-      </div>
-
-      <div className="feature-card swipe" onClick={() => setCurrentView('swipe')}>
-        <div className="card-content">
-          <div className="card-icon">
-            <HeartIcon />
-          </div>
-          <h2>Swipe</h2>
-          <p>Discover your next favorite movie. Swipe right to like, left to pass.</p>
-        </div>
-        <button className="card-button">Start Swiping</button>
-      </div>
-
-      <div className="feature-card compare" onClick={() => setCurrentView('compare')}>
-        <div className="card-content">
-          <div className="card-icon">
-            <CompareIcon />
-          </div>
-          <h2>Compare</h2>
-          <p>Compare movies side by side. Ratings, cast, reviews, and more.</p>
-        </div>
-        <button className="card-button">Compare Now</button>
-      </div>
-    </div>
-  </div>
-);
-
 const searchMovies = (query, setSearchResults, setIsSearching) => {
     if (!query.trim()) {
         setSearchResults([]);
@@ -134,7 +66,7 @@ const MovieSearchResult = ({ movie, onSelect }) => {
   );
 };
 
-const Upload = ({ username, setCurrentView }) => {
+const Upload = (props) => {
   const [inputValue, setInputValue] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -174,85 +106,86 @@ const Upload = ({ username, setCurrentView }) => {
     event.preventDefault();
     
     if (selectedMovie) {
-      uploadMovie(username, selectedMovie.id || selectedMovie.movieDbId, selectedMovie.title, setResult);
+      // Use selected movie from search results
+      uploadMovie(props.username, selectedMovie.id || selectedMovie.movieDbId, selectedMovie.title, setResult);
     } else if (inputValue.trim()) {
-      uploadMovie(username, null, inputValue.trim(), setResult);
+      // Fallback to text search
+      uploadMovie(props.username, null, inputValue.trim(), setResult);
     }
   }
 
   return (
-    <div className="main">
-      <BackArrow onClick={() => setCurrentView('home')} />
-      <div className="page-container">
-        <div className="page-header">
-          <h1>Upload Movies</h1>
-          <p>Find and add movies to your collection</p>
-        </div>
-        <div className="page-content">
-          <div className="upload-container">
-            <form onSubmit={handleSubmit} className="search-form">
-              <div className="search-input-container">
-                <input 
-                  className="search-input" 
-                  type="text" 
-                  value={inputValue} 
-                  onChange={handleChange}
-                  placeholder="Search for movies (e.g., 'Inception', 'Marvel', 'Tom Hanks')..."
-                  autoComplete="off"
-                />
-                
-                {isSearching && <div className="search-spinner">Searching...</div>}
-                
-                {showResults && searchResults.length > 0 && (
-                  <div className="search-results-dropdown">
-                    {searchResults.map((movie, index) => (
-                      <MovieSearchResult 
-                        key={movie.id || movie.movieDbId || index}
-                        movie={movie}
-                        onSelect={handleMovieSelect}
-                      />
-                    ))}
-                  </div>
-                )}
-                
-                {showResults && searchResults.length === 0 && !isSearching && inputValue.length > 2 && (
-                  <div className="search-results-dropdown">
-                    <div className="no-results">No movies found. Try a different search term.</div>
-                  </div>
-                )}
-              </div>
+    <div className="main green">
+        <div className="upload-container">
+          <div className="upload-header">
+            <button className="go-back-btn" onClick={() => props.changeState(0)}>
+              ← Go Back to Home
+            </button>
+            <h1>Find and add a movie you want to see:</h1>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="search-form">
+            <div className="search-input-container">
+              <input 
+                className="textInput search-input" 
+                type="text" 
+                value={inputValue} 
+                onChange={handleChange}
+                placeholder="Search for movies (e.g., 'Inception', 'Marvel', 'Tom Hanks')..."
+                autoComplete="off"
+              />
               
-              <button 
-                className="submitButton" 
-                type="submit" 
-                disabled={!inputValue.trim()}
-              >
-                {selectedMovie ? `Add "${selectedMovie.title}"` : "Search & Add Movie"}
-              </button>
-            </form>
-
-            {selectedMovie && (
-              <div className="selected-movie-preview">
-                <h3>Selected Movie:</h3>
-                <MovieSearchResult movie={selectedMovie} onSelect={() => {}} />
-              </div>
-            )}
+              {isSearching && <div className="search-spinner">Searching...</div>}
+              
+              {showResults && searchResults.length > 0 && (
+                <div className="search-results-dropdown">
+                  {searchResults.map((movie, index) => (
+                    <MovieSearchResult 
+                      key={movie.id || movie.movieDbId || index}
+                      movie={movie}
+                      onSelect={handleMovieSelect}
+                    />
+                  ))}
+                </div>
+              )}
+              
+              {showResults && searchResults.length === 0 && !isSearching && inputValue.length > 2 && (
+                <div className="search-results-dropdown">
+                  <div className="no-results">No movies found. Try a different search term.</div>
+                </div>
+              )}
+            </div>
             
+            <input 
+              className="submitButton" 
+              type="submit" 
+              value={selectedMovie ? `Add "${selectedMovie.title}"` : "Search & Add Movie"} 
+              disabled={!inputValue.trim()}
+            />
+          </form>
+
+          {selectedMovie && (
+            <div className="selected-movie-preview">
+              <h3>Selected Movie:</h3>
+              <MovieSearchResult movie={selectedMovie} onSelect={() => {}} />
+            </div>
+          )}
+        </div>
+        
+        <div className="upload-results">
             {!!result && (
-              <div className="upload-results success">
-                <h2><span role="img" aria-label="success">✅</span> Successfully added to your watchlist!</h2>
-                <Card movie={result} />
-              </div>
+                <>
+                    <h2>✅ Successfully added to your watchlist:</h2>
+                    <Card movie={result} />
+                </>
             )}
             {result !== null && !result && (
-              <div className="upload-results error">
-                <h2><span role="img" aria-label="error">❌</span> Sorry! We couldn't add that movie.</h2>
-                <p>Please try searching for a different movie or check your spelling.</p>
-              </div>
+                <div className="error-message">
+                  <h2>❌ Sorry! We couldn't add that movie.</h2>
+                  <p>Please try searching for a different movie or check your spelling.</p>
+                </div>
             )}
-          </div>
         </div>
-      </div>
     </div>
   );
 }
@@ -298,53 +231,53 @@ const Card = (props) => {
 
 }
 
-const Swipe = ({ username, setCurrentView }) => {
+const Swipe = (props) => {
+
     const [cards, setCards] = useState([]);
     const [cardIndex, setCardIndex] = useState(0);
 
     useEffect(() => {
-        fetchSwipeContents(username, setCards);
-    }, [username])
+        fetchSwipeContents(props.username, setCards);
+    }, [])
 
     const swipeLeft = () => {
         if (cardIndex < cards.length) {
-            postSwipeResults(username, cards[cardIndex], false);
+            console.log(cards[cardIndex]);
+            postSwipeResults(props.username, cards[cardIndex], false);
             setCardIndex((current) => current+1);
         }
     }
 
     const swipeRight = () => {
         if (cardIndex < cards.length) {
-            postSwipeResults(username, cards[cardIndex], true);
+            postSwipeResults(props.username, cards[cardIndex], true);
             setCardIndex((current) => current+1);
         }
     }
 
     useEffect(() => {
         if (cardIndex >= cards.length) {
-            fetchSwipeContents(username, setCards);
+            fetchSwipeContents(props.username, setCards);
             setCardIndex(0);
         }
-    }, [cardIndex, username])
+    }, [cardIndex])
 
     return (
-        <div className="main">
-            <BackArrow onClick={() => setCurrentView('home')} />
-            <div className="page-container">
-                <div className="page-header">
-                    <h1>Swipe Movies</h1>
-                    <p>Discover your next favorite movie by swiping</p>
-                </div>
-                <div className="page-content">
-                    <div className="cardContainer">
-                        {cardIndex < cards.length ? <Card movie={cards[cardIndex]} /> : <h3 className="emptyCard">No movies currently available!</h3>}
-                        <button className="swipe swipeLeft" onClick={swipeLeft} ><span role="img" aria-label="dislike">❌</span></button>
-                        <button className="swipe swipeRight" onClick={swipeRight} ><span role="img" aria-label="like">✅</span></button>
-                    </div>
-                </div>
+        <div className="main brown">
+            <div className="swipe-header">
+                <button className="go-back-btn" onClick={() => props.changeState(0)}>
+                    ← Go Back to Home
+                </button>
+                <h1>For each movie, let us know if you'd watch it or not!</h1>
+            </div>
+            <div className="cardContainer brown">
+                {cardIndex < cards.length ? <Card movie={cards[cardIndex]} /> : <h3 className="emptyCard">No movies currently available!</h3>}
+                <button className="swipe swipeLeft" onClick={swipeLeft} >X</button>
+                <button className="swipe swipeRight" onClick={swipeRight} >✓</button>
             </div>
         </div>
     )
+
 }
 
 const Friend = (props) => {
@@ -377,9 +310,11 @@ const getMovieIntersection = (username, usernames, setMovies) => {
     });
 }
 
-const Compare = ({ username, setCurrentView }) => {
+const Compare = (props) => {
+
     const [friends, setFriends] = useState([]);
     const [movies, setMovies] = useState([]);
+
     const [inputValue, setInputValue] = useState('');
 
     const handleChange = (event) => {
@@ -397,57 +332,70 @@ const Compare = ({ username, setCurrentView }) => {
     }
 
     useEffect(() => {
-        getMovieIntersection(username, friends, setMovies);
-    }, [friends, username]);
+        getMovieIntersection(props.username, friends, setMovies);
+    }, [friends]);
 
     return (
-        <div className="main">
-            <BackArrow onClick={() => setCurrentView('home')} />
-            <div className="page-container">
-                <div className="page-header">
-                    <h1>Compare Movies</h1>
-                    <p>Find movies you and your friends all want to watch</p>
+        <div className="main purple">
+            <div className="compare-header">
+                <button className="go-back-btn" onClick={() => props.changeState(0)}>
+                    ← Go Back to Home
+                </button>
+            </div>
+            <div className="chooseFriends">
+                <form onSubmit={handleSubmit}>
+                  <label>
+                    Enter the username of a friend to compare with:{' '}
+                    <input className="friendInput" type="text" value={inputValue} onChange={handleChange} />
+                  </label>
+                  <input className="friendSubmit" type="submit" value="submit" />
+                </form>
+                <div className="friendList">
+                    {friends.map((f) => (<Friend name={f} key={f} removeFriend={() => removeFriend(f)} />))}
                 </div>
-                <div className="page-content">
-                    <div className="chooseFriends">
-                        <form onSubmit={handleSubmit} className="search-form">
-                            <input 
-                                className="search-input" 
-                                type="text" 
-                                value={inputValue} 
-                                onChange={handleChange}
-                                placeholder="Enter a friend's username..."
-                            />
-                            <button className="submitButton" type="submit">Add Friend</button>
-                        </form>
-                        
-                        {friends.length > 0 && (
-                            <div className="friendList">
-                                <h3>Comparing with:</h3>
-                                {friends.map((f) => (<Friend name={f} key={f} removeFriend={() => removeFriend(f)} />))}
-                            </div>
-                        )}
-                        
-                        {movies.length > 0 && (
-                            <div className="movieList">
-                                <h2>Movies you all want to watch:</h2>
-                                {movies.map((m) => (<Movie movie={m} key={m.title} />))}
-                            </div>
-                        )}
-                        
-                        {friends.length > 0 && movies.length === 0 && (
-                            <div className="no-results">
-                                <p>No common movies found. Try adding more friends or swipe more movies!</p>
-                            </div>
-                        )}
-                    </div>
+                <div className="movieList green">
+                    <h2>Movies you all want to watch:</h2>
+                    {movies.map((m) => (<Movie movie={m} key={m.title} />))}
+                </div>
+            </div>
+        </div>
+    )
+
+}
+
+const Home = (props) => {
+
+    return (
+        <div className="main black">
+            <div className="button-container">
+                <button className="buttonPanel green" onClick={() => props.changeState(1)}>
+                    Pick
+                </button>
+                <button className="buttonPanel brown" onClick={() => props.changeState(2)}>
+                    Swipe
+                </button>
+                <button className="buttonPanel purple" onClick={() => props.changeState(3)}>
+                    Compare
+                </button>
+            </div>
+        </div>
+    )
+
+}
+
+const WelcomePage = (props) => {
+    return (
+        <div className="welcome-page">
+            <div className="welcome-container">
+                <h1 className="welcome-title">Welcome to Movie Finder</h1>
+                <p className="welcome-subtitle">Discover your next favorite movie with friends</p>
+                <div className="login-card">
+                    <Login setUsername={props.setUsername} logIn={props.logIn} />
                 </div>
             </div>
         </div>
     )
 }
-
-// Old Home component replaced with new modern design at the top
 
 const Login = (props) => {
 
@@ -470,14 +418,16 @@ const Login = (props) => {
     }
 
     return (
-        <div className="loginPopup">
+        <div className="login-form">
             <form onSubmit={handleSubmit}>
               <label>
-                <h1>Enter your username:</h1>
-                <input className="usernameInput" type="text" value={inputValue} onChange={handleChange} />
+                <h3>Enter your username:</h3>
+                <input className="usernameInput" type="text" value={inputValue} onChange={handleChange} placeholder="Username" />
               </label>
-              <input className="usernameSubmit" type="submit" value="submit" />
-              <p>OR</p>
+              <input className="usernameSubmit" type="submit" value="Get Started" />
+              <div className="or-divider">
+                <span>OR</span>
+              </div>
               <FacebookLogin
                 appId="3306640759452993" //APP ID NOT CREATED YET
                 fields="name,email,picture"
@@ -490,9 +440,17 @@ const Login = (props) => {
 }
 
 const App = () => {
-  const [currentView, setCurrentView] = useState('home');
+
+  const [state, setState] = useState(0);
+
   const [loggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+
+  const changeState = (newState) => {
+    if (loggedIn) {
+        setState(newState);
+    }
+  }
 
   const logIn = () => {
     setLoggedIn(true);
@@ -500,38 +458,27 @@ const App = () => {
 
   const logout = () => {
     if (loggedIn) {
-      window.location.reload(false);
-    }
-  }
-
-  // Render different views based on currentView state
-  const renderView = () => {
-    if (!loggedIn) {
-      return <Login setUsername={setUsername} logIn={logIn} />;
-    }
-
-    switch(currentView) {
-      case 'upload':
-        return <Upload username={username} setCurrentView={setCurrentView} />;
-      case 'swipe':
-        return <Swipe username={username} setCurrentView={setCurrentView} />;
-      case 'compare':
-        return <Compare username={username} setCurrentView={setCurrentView} />;
-      default:
-        return <Home setCurrentView={setCurrentView} username={username} />;
+        window.location.reload(false);
     }
   }
 
   return (
-    <div>
-      {loggedIn && (
-        <button className="logout" onClick={logout}>
-          Logout
-        </button>
-      )}
-      {renderView()}
-    </div>
-  );
+    <>
+     {loggedIn && (
+       <>
+         <button className="nav" onClick={()=>setState(0)}>
+            {username}'s Home
+         </button>
+         <button className="logout" onClick={logout}>Logout</button>
+       </>
+     )}
+     {!loggedIn && < WelcomePage setUsername={setUsername} logIn={logIn}/>}
+     {loggedIn && state === 0 && < Home changeState={changeState}/>}
+     {loggedIn && state === 1 && < Upload username={username} changeState={changeState} />}
+     {loggedIn && state === 2 && < Swipe username={username} changeState={changeState} />}
+     {loggedIn && state === 3 && < Compare username={username} changeState={changeState} />}
+    </>
+  )
 }
 
 ReactDOM.render(

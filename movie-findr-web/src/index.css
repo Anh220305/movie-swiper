@@ -626,6 +626,16 @@ button {
 
 /* Responsive design */
 @media (max-width: 768px) {
+    .home-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .feature-card {
+        min-height: 320px;
+        padding: 30px 20px;
+    }
+    
     .upload-container {
         padding: 10px;
     }
@@ -656,5 +666,21 @@ button {
         width: 50px;
         height: 75px;
         margin-right: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .feature-card {
+        width: 260px;
+        height: 300px;
+        padding: 25px 15px;
+    }
+    
+    .card-content h2 {
+        font-size: 24px;
+    }
+    
+    .card-content p {
+        font-size: 14px;
     }
 }

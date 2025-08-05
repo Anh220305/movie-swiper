@@ -1,7 +1,6 @@
-KKK
 
 Movie swiper log in platform and connection with facebook
-<img width="541" height="470" alt="image" src="https://github.com/user-attachments/assets/9688c412-fdef-4912-a742-53f65694498f" />
+<img width="1231" height="724" alt="image" src="https://github.com/user-attachments/assets/d3d4d04b-03a9-4bcb-82aa-83eecfa32985" />
 
 Features to pick movies you like, if not then you can choose and swipe left and right on movies to decide then compare with your friends 
 

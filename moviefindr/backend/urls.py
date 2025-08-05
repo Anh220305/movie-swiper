@@ -1,4 +1,4 @@
-from django.conf.urls import url
+# from django.conf.urls import url  # deprecated
 from django.urls import path
 from . import views
 
@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/rate_movie', views.rate_movie, name='rate_movie'),
     path('api/names', views.get_movie_names, name='get_names'),
     path('api/populate', views.populate_new_movies, name='populate_movie_list'),
+    path('api/search', views.search_movies, name='search_movies'),
     path('api/upload', views.try_movie_upload, name='try_movie_upload'),
     path('', views.index, name='index'),
 ]

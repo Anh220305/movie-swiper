@@ -74,32 +74,110 @@ def get_or_create_user(username):
     return user
 
 @csrf_exempt
+def search_movies(request):
+    """
+    Enhanced movie search that returns multiple results with detailed info
+    """
+    query = request.GET.get('query', '')
+    if not query:
+        return JsonResponse({'results': []})
+
+    # Search in our local database first
+    local_movies = Movie.objects.filter(title__icontains=query)[:5]
+    local_results = [MovieSerializer(movie).data for movie in local_movies]
+
+    # Search MovieDB API for additional results
+    url = f'https://api.themoviedb.org/3/search/movie?api_key={API_KEY}&query={query}&page=1'
+    
+    try:
+        r = requests.get(url)
+        if r.status_code == 200:
+            api_results = r.json()['results'][:10]  # Limit to top 10 results
+            
+            # Process API results and add more details
+            construct_img_url = create_url_construction_fn()
+            enhanced_results = []
+            
+            for movie in api_results:
+                # Check if we already have this movie in our DB
+                existing_movie = Movie.objects.filter(movieDbId=movie['id']).first()
+                if existing_movie:
+                    enhanced_results.append(MovieSerializer(existing_movie).data)
+                else:
+                    # Add enhanced data from API
+                    enhanced_movie = {
+                        'id': movie['id'],
+                        'title': movie['title'],
+                        'description': movie.get('overview', ''),
+                        'posterUrl': construct_img_url(movie.get('poster_path', '')),
+                        'release_date': movie.get('release_date', ''),
+                        'vote_average': movie.get('vote_average', 0),
+                        'popularity': movie.get('popularity', 0),
+                        'genre_ids': movie.get('genre_ids', []),
+                        'in_database': False
+                    }
+                    enhanced_results.append(enhanced_movie)
+            
+            # Combine local and API results, removing duplicates
+            all_results = local_results.copy()
+            local_ids = {movie.get('movieDbId') for movie in local_results if movie.get('movieDbId')}
+            
+            for result in enhanced_results:
+                if result.get('id') not in local_ids:
+                    all_results.append(result)
+            
+            return JsonResponse({'results': all_results[:15]})  # Limit total results
+    except Exception as e:
+        print(f"Error searching movies: {e}")
+    
+    return JsonResponse({'results': local_results})
+
+@csrf_exempt
 def try_movie_upload(request):
     username = request.GET.get('username')
     user = get_or_create_user(username)
-    movie_name = request.GET.get('movie')
+    movie_id = request.GET.get('movie_id')  # Changed to use movie_id instead of name
+    movie_name = request.GET.get('movie')   # Keep backward compatibility
 
-    in_our_db = Movie.objects.filter(title=movie_name).exists()
+    movie = None
 
-    if in_our_db:
-        movie = Movie.objects.filter(title=movie_name)[0]
-    else:
-        # Try to find movie in MovieDB
-        url = 'https://api.themoviedb.org/3/search/movie?api_key=%s&query=%s' % (API_KEY, movie_name)
-        r = requests.get(url)
-        if r.status_code == 200:
-            results = r.json()['results']
-            if len(results) > 0:
-                foundMovie = results[0]  # replace this with DB result
-                moviedb_id = foundMovie['id']
+    if movie_id:
+        # Try to find by MovieDB ID first (more accurate)
+        movie = Movie.objects.filter(movieDbId=int(movie_id)).first()
+        
+        if not movie:
+            # If not in our DB, fetch from MovieDB API and add it
+            url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={API_KEY}'
+            r = requests.get(url)
+            if r.status_code == 200:
+                movie_data = r.json()
                 construct_img_url = create_url_construction_fn()
-                add_movie_to_db(foundMovie, construct_img_url)
-                movie = Movie.objects.filter(movieDbId=int(moviedb_id))[0]
-            else:
-                return JsonResponse(False, safe=False)
+                add_movie_to_db(movie_data, construct_img_url)
+                movie = Movie.objects.filter(movieDbId=int(movie_id)).first()
+    
+    elif movie_name:
+        # Fallback to name search for backward compatibility
+        in_our_db = Movie.objects.filter(title=movie_name).exists()
+
+        if in_our_db:
+            movie = Movie.objects.filter(title=movie_name)[0]
+        else:
+            # Try to find movie in MovieDB
+            url = 'https://api.themoviedb.org/3/search/movie?api_key=%s&query=%s' % (API_KEY, movie_name)
+            r = requests.get(url)
+            if r.status_code == 200:
+                results = r.json()['results']
+                if len(results) > 0:
+                    foundMovie = results[0]  # replace this with DB result
+                    moviedb_id = foundMovie['id']
+                    construct_img_url = create_url_construction_fn()
+                    add_movie_to_db(foundMovie, construct_img_url)
+                    movie = Movie.objects.filter(movieDbId=int(moviedb_id))[0]
+
+    if not movie:
+        return JsonResponse(False, safe=False)
 
     user.liked_movies.add(movie)
-
     return JsonResponse(MovieSerializer(movie).data, safe=False)
 
 @csrf_exempt

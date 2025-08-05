@@ -1,97 +1,231 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,600;0,700;1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
 }
 
 button {
     border-style: none;
-    font-family: 'Nunito', sans-serif;
-    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 #root{
     width: 100%;
     height: 100%;
     margin: 0;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
-.nav {
-    position: fixed;
+/* Back Arrow Navigation */
+.back-arrow {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 1000;
+}
+
+.back-arrow:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-5px);
+}
+
+.back-arrow svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+}
+
+/* Main Container */
+.main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+}
+
+/* Home Screen - Card Layout */
+.home-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+}
+
+/* Feature Cards */
+.feature-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 40px 30px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 50px;
-    background-color: black;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.feature-card:hover::before {
+    opacity: 1;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Upload Card */
+.feature-card.upload {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+}
+
+/* Swipe Card */
+.feature-card.swipe {
+    background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%);
+}
+
+/* Compare Card */
+.feature-card.compare {
+    background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
+}
+
+/* Card Icons */
+.card-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 30px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .card-icon {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.card-icon svg {
+    width: 40px;
+    height: 40px;
+    fill: white;
+}
+
+/* Card Content */
+.card-content h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
     color: white;
-    cursor: pointer;
 }
 
-.textInput {
-    width: 700px;
-    height: 100px;
-    border-radius: 10px 0px 0px 10px;
-    font-size: 30px;
-    padding: 0px 15px;
-    border: 2px solid black;
+.card-content p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 30px;
 }
 
-.submitButton {
-    height: 106px;
-    padding: 1px 15px;
-    border-radius: 0px 10px 10px 0px;
-    font-size: 30px;
-    font-family: 'Nunito', sans-serif;
-    border: 2px solid black;
+/* Card Buttons */
+.card-button {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.nav:hover{
-    background-color: #333333;
+.card-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
 }
 
-.main {
-
-    padding-top: 50px;
-    height: 100%;
+/* Individual Page Styles */
+.page-container {
+    max-width: 1000px;
     width: 100%;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    min-height: 80vh;
+}
+
+.page-header {
+    padding: 40px;
     text-align: center;
-    vertical-align: middle;
-
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.buttonPanel {
-    height: 100%;
-    width: 33%;
-    display: inline-block;
-    cursor: pointer;
-    font-size: 50px;
+.page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: white;
 }
 
-.black {
-    background-color: black;
+.page-header p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
 }
 
-.pink {
-    background-color: #FFAEBC;
-}
-.blue {
-    background-color: #A0E7E5;
-}
-.green {
-    background-color: #B4F8C8;
-}
-
-.buttonPanel.pink:hover {
-    background-color: #f09caa;
-}
-.buttonPanel.blue:hover {
-    background-color: #87ccca;
-}
-.buttonPanel.green:hover {
-    background-color: #9cd9ae;
+.page-content {
+    padding: 40px;
 }
 
 .poster {
@@ -107,14 +241,16 @@ button {
 }
 
 .cardContainer {
-    background-color: white;
-    border-radius: 10px;
-    margin: 40px 80px;
-    padding-top: 70px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    margin: 20px auto;
+    padding: 40px;
     text-align: center;
-    vertical-align: middle;
-    height: 70%;
+    max-width: 600px;
     position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
 .emptyCard {
@@ -125,40 +261,52 @@ button {
 }
 
 .swipe {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    font-size: 30px;
+    font-size: 24px;
     font-weight: bold;
     position: absolute;
-    bottom: 10%;
+    bottom: 20px;
     cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
 
 .swipe:hover {
-    background-color: #e6e6e6;
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
 }
 
 .swipeLeft {
-    color: red;
-    left: 35%;
+    left: 50px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
 }
 
 .swipeRight {
-    color: green;
-    right: 35%;
+    right: 50px;
+    background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
 }
 
 .loginPopup {
     position: absolute;
-    background-color: white;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
     left: 25%;
     top: 25%;
-    width:50%;
-    height: 30%;
+    width: 50%;
+    padding: 40px;
     text-align: center;
-    vertical-align: middle;
-    border-radius: 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    color: white;
 }
 
 .usernameInput {
@@ -174,10 +322,30 @@ button {
 }
 
 .friend {
-    background-color: #e6e6e6;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
     display: inline-block;
-    padding: 5px;
-    margin: 5px;
+    padding: 12px 16px;
+    margin: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-weight: 500;
+}
+
+.friend button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 4px 8px;
+    margin-left: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.friend button:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .miniPoster {
@@ -213,6 +381,280 @@ button {
 
 .logout {
     position: fixed;
-    right: 20px;
-    top: 15px;
+    right: 30px;
+    top: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.logout:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Enhanced Search Styles */
+.upload-container {
+    width: 100%;
+}
+
+.search-form {
+    margin: 30px 0;
+}
+
+.search-input-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.search-input, .textInput {
+    width: 100%;
+    padding: 20px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.search-input::placeholder, .textInput::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-input:focus, .textInput:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.submitButton {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    margin-top: 10px;
+}
+
+.submitButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.submitButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.search-spinner {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-style: italic;
+}
+
+.search-results-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid black;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-result-item {
+    display: flex;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.search-result-item:hover {
+    background-color: #f8f9fa;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-poster {
+    flex-shrink: 0;
+    width: 60px;
+    height: 90px;
+    margin-right: 15px;
+}
+
+.search-result-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.poster-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #666;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.search-result-info {
+    flex: 1;
+    text-align: left;
+}
+
+.search-result-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.search-result-info p {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.movie-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.rating {
+    background-color: #ffd700;
+    color: #333;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.new-movie {
+    background-color: #28a745;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.no-results {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+.selected-movie-preview {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    border: 2px dashed #333;
+}
+
+.selected-movie-preview h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.selected-movie-preview .search-result-item {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    cursor: default;
+}
+
+.upload-results {
+    margin-top: 30px;
+}
+
+.error-message {
+    color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #dc3545;
+}
+
+.error-message h2 {
+    margin-top: 0;
+}
+
+.submitButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .upload-container {
+        padding: 10px;
+    }
+    
+    .textInput, .search-input {
+        width: 100%;
+        font-size: 18px;
+        height: 60px;
+    }
+    
+    .submitButton {
+        height: 66px;
+        font-size: 18px;
+        width: 100%;
+        margin-top: 10px;
+        border-radius: 10px;
+    }
+    
+    .search-input-container {
+        display: block;
+    }
+    
+    .search-result-item {
+        padding: 10px;
+    }
+    
+    .search-result-poster {
+        width: 50px;
+        height: 75px;
+        margin-right: 10px;
+    }
 }
